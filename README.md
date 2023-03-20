@@ -4,6 +4,15 @@ In `normal` mode, searches for the word under the cursor.
 
 In `visual` mode, searches for the selected text.
 
+### Demo
+
+
+https://user-images.githubusercontent.com/33713262/226383032-113b4db8-27a3-4b8f-aa36-c0765b2cc903.mp4
+
+
+
+### Install
+
 ```lua
 -- Install with Lazy
 {
