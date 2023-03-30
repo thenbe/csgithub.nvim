@@ -45,7 +45,7 @@ end
 M.construct_url = function(query)
 	local utils = require("csgithub.utils")
 	local encoded_query = utils.url_encode(query)
-	local base = "https://cs.github.com/?scopeName=All+repos&scope=&q="
+	local base = "https://github.com/search?type=code&q="
 	local url = base .. encoded_query
 	return url
 end
