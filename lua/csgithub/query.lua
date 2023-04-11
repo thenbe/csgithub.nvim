@@ -6,7 +6,7 @@ M.construct_query_path = function(args)
 	if args.includeExtension and not args.includeFilename then
 		return "*." .. ext
 	else
-		return vim.fn.expand("%")
+		return vim.fn.expand("%:t")
 	end
 end
 
