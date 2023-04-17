@@ -17,4 +17,20 @@ M.search = function(args)
 	return url
 end
 
+function M.open(url)
+	-- return if url is empty
+	if url == nil or url == "" then
+		print("Error: url is empty!")
+		return
+	end
+
+	if vim.fn.has("mac") == 1 then
+		vim.fn.jobstart({ "open", url }, { detach = true })
+	elseif vim.fn.has("unix") == 1 then
+		vim.fn.jobstart({ "xdg-open", url }, { detach = true })
+	else
+		print("Error: unknown open command on this OS!")
+	end
+end
+
 return M
