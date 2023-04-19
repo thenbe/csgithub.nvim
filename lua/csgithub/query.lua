@@ -1,5 +1,12 @@
 local M = {}
 
+--- useful for visual line mode when extra whitespace is 
+--- included in search query
+--- @param s string
+local function trim_string(s)
+   return (s:gsub("^%s*(.-)%s*$", "%1"))
+end
+
 M.construct_query_path = function(args)
 	local ext = vim.fn.expand("%:e")
 
@@ -27,14 +34,14 @@ end
 M.construct_query_text = function()
 	local utils = require("csgithub.utils")
 	local text = ""
-	if vim.fn.mode() == "v" then
-		-- visual mode
-		text = utils.get_visual_selection()
+	local mode = vim.api.nvim_get_mode().mode
+	if mode == "v" or mode == "V" then
+		-- visual mode, visual line mode
+		text = trim_string(utils.get_visual_selection())
 	else
 		-- normal mode
 		text = vim.fn.expand("<cword>")
 	end
-
 	return text
 end
 
