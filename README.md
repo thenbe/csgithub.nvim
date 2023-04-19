@@ -23,6 +23,7 @@ https://user-images.githubusercontent.com/33713262/226383032-113b4db8-27a3-4b8f-
         local url = csgithub.search({
           includeFilename = false,
           includeExtension = true,
+          betaSearch = false, -- if you have opted in to the beta search on github, toggle this to true
         })
 
         csgithub.open(url)
