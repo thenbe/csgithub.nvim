@@ -50,6 +50,10 @@ end
 M.construct_query = function(args)
 	local query_parts = {}
 
+	local query_text = M.construct_query_text()
+	if query_text == "" then
+		return nil
+	end
 	-- path:
 	if args.includeFilename or args.includeExtension then
 		local path = M.construct_query_path(args)
@@ -58,7 +62,7 @@ M.construct_query = function(args)
 	end
 
 	-- text
-	table.insert(query_parts, M.construct_query_text())
+	table.insert(query_parts, query_text)
 
 	return table.concat(query_parts, " ")
 end
