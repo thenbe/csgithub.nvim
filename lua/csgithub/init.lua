@@ -6,6 +6,7 @@ M.search = function(args)
 	local default_args = {
 		includeFilename = false,
 		includeExtension = true,
+		betaSearch = true,
 	}
 
 	local merged_args = vim.tbl_extend("force", default_args, args or {})
