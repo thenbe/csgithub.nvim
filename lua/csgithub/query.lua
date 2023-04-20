@@ -1,10 +1,10 @@
 local M = {}
 
---- useful for visual line mode when extra whitespace is 
+--- useful for visual line mode when extra whitespace is
 --- included in search query
 --- @param s string
 local function trim_string(s)
-   return (s:gsub("^%s*(.-)%s*$", "%1"))
+	return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
 M.construct_query_path = function(args)
