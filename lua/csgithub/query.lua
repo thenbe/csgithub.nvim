@@ -1,5 +1,12 @@
 local M = {}
 
+--- useful for visual line mode when extra whitespace is
+--- included in search query
+--- @param s string
+local function trim_string(s)
+	return (s:gsub("^%s*(.-)%s*$", "%1"))
+end
+
 M.construct_query_path = function(args)
 	local ext = vim.fn.expand("%:e")
 
@@ -27,14 +34,14 @@ end
 M.construct_query_text = function()
 	local utils = require("csgithub.utils")
 	local text = ""
-	if vim.fn.mode() == "v" then
-		-- visual mode
-		text = utils.get_visual_selection()
+	local mode = vim.api.nvim_get_mode().mode
+	if mode == "v" or mode == "V" then
+		-- visual mode, visual line mode
+		text = trim_string(utils.get_visual_selection())
 	else
 		-- normal mode
 		text = vim.fn.expand("<cword>")
 	end
-
 	return text
 end
 
@@ -43,6 +50,10 @@ end
 M.construct_query = function(args)
 	local query_parts = {}
 
+	local query_text = M.construct_query_text()
+	if query_text == "" then
+		return nil
+	end
 	-- path:
 	if args.includeFilename or args.includeExtension then
 		local path = M.construct_query_path(args)
@@ -51,7 +62,7 @@ M.construct_query = function(args)
 	end
 
 	-- text
-	table.insert(query_parts, M.construct_query_text())
+	table.insert(query_parts, query_text)
 
 	return table.concat(query_parts, " ")
 end

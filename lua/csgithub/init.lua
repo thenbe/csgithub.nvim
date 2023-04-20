@@ -13,6 +13,9 @@ M.search = function(args)
 
 	local query = require("csgithub.query")
 	local q = query.construct_query(merged_args)
+	if q == nil then
+		return nil
+	end
 	local url = query.construct_url(q)
 
 	return url
