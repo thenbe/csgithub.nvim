@@ -7,30 +7,6 @@ local function trim_string(s)
 	return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
-M.construct_query_path = function(args)
-	local ext = vim.fn.expand("%:e")
-
-	local onlyExtension = args.includeExtension and not args.includeFilename
-
-	if onlyExtension and args.betaSearch then
-		return "*." .. ext
-	elseif onlyExtension then
-		return "." .. ext
-	else
-		return vim.fn.expand("%:t")
-	end
-end
-
-M.construct_search_field = function(args)
-	if not args.betaSearch and args.includeFilename then
-		return "filename:"
-	elseif not args.betaSearch and args.includeExtension then
-		return "extension:"
-	else
-		return "path:"
-	end
-end
-
 M.construct_query_text = function()
 	local utils = require("csgithub.utils")
 	local text = ""
@@ -46,34 +22,46 @@ M.construct_query_text = function()
 end
 
 -- Return search url
----@param args table
+---@param args SearchArgs
 M.construct_query = function(args)
 	local query_parts = {}
 
+	---@type SearchProvider
+	local provider = M.get_provider(args)
+
+	-- query options (eg. path:myfile.txt, extension:txt, etc.)
+	if args.includeFilename or args.includeExtension then
+		query_parts = provider.construct_query_options(args)
+	end
+
+	-- text
 	local query_text = M.construct_query_text()
 	if query_text == "" then
 		return nil
 	end
-	-- path:
-	if args.includeFilename or args.includeExtension then
-		local path = M.construct_query_path(args)
-		local search_field = M.construct_search_field(args)
-		table.insert(query_parts, search_field .. path)
-	end
-
-	-- text
 	table.insert(query_parts, query_text)
 
-	return table.concat(query_parts, " ")
+	local query = table.concat(query_parts, " ")
+	return query
 end
 
----@param query string
-M.construct_url = function(query)
+---@param args SearchArgs
+---@return SearchProvider
+M.get_provider = function(args)
+	if args.provider == "sourcegraph" then
+		return require("csgithub.providers.sourcegraph")
+	else
+		return require("csgithub.providers.github")
+	end
+end
+
+---@param url_query string
+---@param args SearchArgs
+M.construct_url = function(url_query, args)
 	local utils = require("csgithub.utils")
-	local encoded_query = utils.url_encode(query)
-	local base = "https://github.com/search?type=code&q="
-	local url = base .. encoded_query
-	return url
+	local encoded_query = utils.url_encode(url_query)
+	local provider = M.get_provider(args)
+	return provider.construct_url(encoded_query)
 end
 
 return M

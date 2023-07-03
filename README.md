@@ -1,4 +1,4 @@
-A simple plugin to simplify searching for code on [Github Code Search](https://cs.github.com).
+A simple plugin to quickly search for code on [Github Code Search](https://cs.github.com) or [Sourcegraph](https://sourcegraph.com/search)
 
 In `normal` mode, searches for the word under the cursor.
 
@@ -24,6 +24,7 @@ https://user-images.githubusercontent.com/33713262/226383032-113b4db8-27a3-4b8f-
           includeFilename = false,
           includeExtension = true,
           betaSearch = true, -- set to false if you haven't opted in to GitHub Code Search (beta)
+          provider = "github", -- "github" | "sourcegraph"
         })
 
         csgithub.open(url)

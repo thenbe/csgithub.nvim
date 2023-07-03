@@ -1,12 +1,14 @@
 local M = {}
 
 -- Return search url
----@param args table|nil
+---@param args SearchArgs|nil
 M.search = function(args)
+	---@type SearchArgs
 	local default_args = {
 		includeFilename = false,
 		includeExtension = true,
 		betaSearch = true,
+		provider = "github",
 	}
 
 	local merged_args = vim.tbl_extend("force", default_args, args or {})
@@ -16,7 +18,7 @@ M.search = function(args)
 	if q == nil then
 		return nil
 	end
-	local url = query.construct_url(q)
+	local url = query.construct_url(q, merged_args)
 
 	return url
 end
