@@ -11,26 +11,42 @@ https://user-images.githubusercontent.com/33713262/226383032-113b4db8-27a3-4b8f-
 ### Install
 
 ```lua
--- Install with Lazy
 {
-  "thenbe/csgithub.nvim",
+  'thenbe/csgithub.nvim',
   keys = {
     {
-      "<leader>feg",
+      '<leader>fege',
       function()
-        local csgithub = require("csgithub")
-
+        local csgithub = require('csgithub')
         local url = csgithub.search({
           includeFilename = false,
           includeExtension = true,
-          betaSearch = true, -- set to false if you haven't opted in to GitHub Code Search (beta)
         })
-
         csgithub.open(url)
       end,
-      mode = { "n", "v" },
-      desc = "Search Github",
+      mode = { 'v', 'n' },
+      desc = 'Search Github (extension)',
+    },
+    {
+      '<leader>fegf',
+      function()
+        local csgithub = require('csgithub')
+        local url = csgithub.search({
+          includeFilename = true,
+          includeExtension = true,
+        })
+        csgithub.open(url)
+      end,
+      mode = { 'v', 'n' },
+      desc = 'Search Github (filename)',
     },
   },
 }
 ```
+
+### Keys
+
+This plugin does not set any keymaps, so you'll need to set some on your own. The snippet above is how I have mine set up, and includes two keymaps:
+
+1. A keymap that searches in files that have the same extension (e.g. `*.nix`, `*.lua`).
+1. A keymap for searching in files that have the exact same filename. This is useful when the file lacks intellisense and you can't quite remember the exact syntax (e.g. `.gitconfig`, `.npmrc`, `flake.nix`, `kitty.conf`).
